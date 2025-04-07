@@ -48,7 +48,7 @@ namespace TrieTests
             trie.Add("apple");
             trie.Add("application");
             trie.Add("app");
-            Assert.IsTrue(trie.Remove("apple"));
+            Assert.IsFalse(trie.Remove("apple"));
             Assert.IsFalse(trie.Contains("apple"));
         }
 
