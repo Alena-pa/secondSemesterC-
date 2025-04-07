@@ -68,7 +68,6 @@ public class Trie
 
     private bool RemoveRecursively(TrieNode node, string element, int index)
     {
-        Console.WriteLine($"Starting to remove the word: {element}");
         if (index == element.Length)
         {
             if (!node.isLeaf)
@@ -94,7 +93,6 @@ public class Trie
             return IsNodeEmpty(node) && !node.isLeaf;
         }
 
-        Console.WriteLine($"Child '{c}' to be deleted. Returning false.");
         return false;
     }
     private bool IsNodeEmpty(TrieNode node)
