@@ -1,33 +1,23 @@
 ﻿using BurrowsWheeler;
+using System.Text;
 
 class Program
 {
     static void Main()
     {
         Console.WriteLine("Enter the word: ");
-        string? input = Console.ReadLine();
+        StringBuilder input = new StringBuilder(Console.ReadLine());
 
-        if (string.IsNullOrEmpty(input))
+        if (input == null || input.Length == 0)
         {
             return;
         }
 
-        string? result = BurrowsWheelerTransform.BWT(input);
+        int indexOfLastElement = BurrowsWheelerTransform.BWT(ref input);
 
-        if (result != null)
-        {
-            Console.WriteLine($"\nDirect transformation: {result}\n");
+        Console.WriteLine(input);
 
-            int index = result.LastIndexOf('$');
-            if (index != -1)
-            {
-                string? inverseResult = BurrowsWheelerTransform.ReverseBWT(result, index);
-                Console.WriteLine("Inverse transformation: " + inverseResult + "\n");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Error: Input string is null.");
-        }
+        BurrowsWheelerTransform.ReverseBWT(ref input, indexOfLastElement);
+        Console.WriteLine(input);
     }
 }

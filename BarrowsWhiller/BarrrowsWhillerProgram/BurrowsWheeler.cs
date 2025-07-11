@@ -4,23 +4,25 @@ using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BurrowsWheeler;
 
 public class BurrowsWheelerTransform
 {
-    public static string? BWT(string input)
+    public static int BWT(ref StringBuilder input)
     {
-        if (string.IsNullOrEmpty(input))
+        if (input == null || input.Length == 0)
         {
-            return null;
+            throw new ArgumentException("Incorrect input");
         }
 
+        input.Append('\0');
         int textLength = input.Length;
         var table = new string[textLength];
         for (int i = 0; i < textLength; i++)
         {
-            table[i] = input.Substring(i) + input.Substring(0, i);
+            table[i] = input.ToString().Substring(i) + input.ToString().Substring(0, i);
         }
 
         var sortedTable = table.OrderBy(s => s).ToArray();
@@ -31,52 +33,37 @@ public class BurrowsWheelerTransform
             bwtResult.Append(row[textLength - 1]);
         }
 
-        return bwtResult.ToString();
+        input = bwtResult;
+        return input.ToString().IndexOf('\0');
     }
 
-    public static string? ReverseBWT(string bwtText, int startIndex)
+    public static void ReverseBWT(ref StringBuilder bwtText, int startIndex)
     {
-        if (string.IsNullOrEmpty(bwtText) || startIndex < 0)
+        if (bwtText == null || bwtText.Length == 0)
         {
-            return null;
+            return;
         }
-
         int textLength = bwtText.Length;
-
-        var symbolCount = bwtText.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
-        var sortedBwt = bwtText.OrderBy(c => c).ToArray();
-
-        int[] indexMapping = new int[textLength];
-        int[] count = new int[256];
-
-        foreach (var c in bwtText)
+        var table = new StringBuilder[textLength];
+        for (int i = 0; i < table.Length; i++)
         {
-            count[c]++;
+            table[i] = new StringBuilder();
         }
-
-        int cumulativeCount = 0;
-        for (int i = 0; i < 256; i++)
-        {
-            int temp = count[i];
-            count[i] = cumulativeCount;
-            cumulativeCount += temp;
-        }
-
         for (int i = 0; i < textLength; i++)
         {
-            indexMapping[count[bwtText[i]]] = i;
-            count[bwtText[i]]++;
+            for (int j = 0; j < textLength; j++)
+            {
+                table[j].Insert(0, bwtText[j]);
+                table = table.OrderBy(s => s.ToString()).ToArray();
+            }
         }
-
-        char[] result = new char[textLength];
-        int currentIndex = indexMapping[startIndex];
-
         for (int i = 0; i < textLength; i++)
         {
-            result[i] = bwtText[currentIndex];
-            currentIndex = indexMapping[currentIndex];
+            if (table[i][table[i].Length - 1] == '\0')
+            {
+                bwtText = table[i];
+                return;
+            }
         }
-
-        return new string(result);
     }
 }
