@@ -57,13 +57,12 @@ public class Trie
 
     public bool Remove(string element)
     {
-        if (!Contains(element))
+        if (string.IsNullOrEmpty(element))
         {
             return false;
         }
 
         return RemoveRecursively(root, element, 0);
-        return true;
     }
 
     private bool RemoveRecursively(TrieNode node, string element, int index)
@@ -75,7 +74,7 @@ public class Trie
                 return false;
             }
             node.isLeaf = false;
-            return IsNodeEmpty(node);
+            return true;
         }
 
         char c = element[index];
@@ -87,13 +86,12 @@ public class Trie
 
         bool shouldDeleteChild = RemoveRecursively(node.children[childIndex], element, index + 1);
 
-        if (shouldDeleteChild)
+        if (shouldDeleteChild && IsNodeEmpty(node.children[childIndex]))
         {
             node.children[childIndex] = null;
-            return IsNodeEmpty(node) && !node.isLeaf;
         }
 
-        return false;
+        return shouldDeleteChild;
     }
     private bool IsNodeEmpty(TrieNode node)
     {
