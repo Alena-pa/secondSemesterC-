@@ -10,7 +10,7 @@ public class Trie
     public int NumberOfCodes = 0;
     public class TrieNode
     {
-        public TrieNode[] children = new TrieNode[256];
+        public Dictionary<char, TrieNode> children = new Dictionary<char, TrieNode>();
         public int code = 0;
         public bool isLeaf = false;
     }
@@ -21,12 +21,11 @@ public class Trie
         TrieNode curr = root;
         foreach (char symbol in element)
         {
-            int index = symbol - 'a';
-            if (curr.children[index] == null)
+            if (curr.children.ContainsKey(symbol) == false)
             {
-                curr.children[index] = new TrieNode();
+                curr.children[symbol] = new TrieNode();
             }
-            curr = curr.children[index];
+            curr = curr.children[symbol];
         }
 
         if (curr.isLeaf)
@@ -44,36 +43,56 @@ public class Trie
         TrieNode curr = root;
         foreach (char symbol in element)
         {
-            int index = symbol - 'a';
-            if (curr.children[index] == null)
+            if (curr.children.ContainsKey(symbol) == false)
             {
                 return false;
             }
-            curr = curr.children[index];
+            curr = curr.children[symbol];
         }
         return curr.isLeaf;
     }
 
-    public int PhraseCode(string element)
+    public int CodeByPhrase(string element)
     {
         TrieNode curr = root;
         foreach (char symbol in element)
         {
-            int index = symbol - 'a';
-            if (curr.children[index] == null)
+            if (curr.children.ContainsKey(symbol) == false)
             {
                 return -1;
             }
-            curr = curr.children[index];
+            curr = curr.children[symbol];
         }
         return curr.code;
     }
 
-    public string CodeByPhrase(int code, Trie trie)
+    public string PhraseByCode(int code, Trie trie)
     {
+        return DFS(root, code, "");
     }
 
-    public string DFS(Trie trie, int targetNode, int )
+    public string DFS(TrieNode node, int targetCode, string currPhrase)
+    {
+        foreach ((char symbol, TrieNode child) in node.children)
+        {
+            string nextPhrase = currPhrase + symbol;
+            if (child == null) continue;
+
+            if (child.isLeaf && child.code == targetCode)
+            {
+                return nextPhrase;
+            }
+            else
+            {
+                string foundPhrase = DFS(child, targetCode, nextPhrase);
+                if (foundPhrase != nextPhrase)
+                {
+                    return foundPhrase;
+                }
+            }
+        }  
+        return currPhrase;
+    }
     public bool Remove(string element)
     {
         if (string.IsNullOrEmpty(element))
@@ -81,40 +100,30 @@ public class Trie
             return false;
         }
 
-        return RemoveRecursively(root, element, 0);
+        return RemoveRecursively(root, element);
     }
 
-    private bool RemoveRecursively(TrieNode node, string element, int index)
+    private bool RemoveRecursively(TrieNode node, string element)
     {
-        if (index == element.Length)
+        if (element.Length == 0)
         {
-            if (!node.isLeaf)
+            if (node.isLeaf)
             {
-                return false;
+                node.isLeaf = false;
             }
-            node.isLeaf = false;
-            return true;
-        }
-
-        char c = element[index];
-        int childIndex = c - 'a';
-        if (node.children[childIndex] == null)
-        {
+            if (node.children.Count > 0) return true;
             return false;
         }
-
-        bool shouldDeleteChild = RemoveRecursively(node.children[childIndex], element, index + 1);
-
-        if (shouldDeleteChild && IsNodeEmpty(node.children[childIndex]))
+        bool canRemove = RemoveRecursively(node.children[element[0]], element.Substring(1));
+        if (canRemove)
         {
-            node.children[childIndex] = null;
+            node.children.Remove(element[0]);
         }
-
-        return shouldDeleteChild;
+        return false;
     }
     private bool IsNodeEmpty(TrieNode node)
     {
-        foreach (TrieNode child in node.children)
+        foreach ((char symbol, TrieNode child) in node.children)
         {
             if (child != null)
             {
@@ -135,12 +144,11 @@ public class Trie
 
         foreach (char symbol in prefix)
         {
-            int index = symbol - 'a';
-            if (curr.children[index] == null)
+            if (curr.children[symbol] == null)
             {
                 return 0;
             }
-            curr = curr.children[index];
+            curr = curr.children[symbol];
         }
 
         return CountWords(curr);
@@ -159,7 +167,7 @@ public class Trie
             count = 1;
         }
 
-        foreach (TrieNode child in node.children)
+        foreach ((char symbol, TrieNode child) in node.children)
         {
             count += CountWords(child);
         }
