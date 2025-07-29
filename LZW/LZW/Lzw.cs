@@ -13,8 +13,19 @@ public class LZWAlgorythm
 {
     public static double CompressFile(string filePath)
     {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("File not found", filePath);
+        }
+
         StreamReader sr = new StreamReader(filePath);
         var data = sr.ReadLine();
+        sr.Close();
+
+        if (string.IsNullOrEmpty(data))
+        {
+            throw new InvalidDataException("File is empty or contains only empty string");
+        }
 
         (string output, string alphabet) = LZWAlgorythm.Compress(data.ToString());
 
@@ -34,11 +45,21 @@ public class LZWAlgorythm
     }
     public static void DecompressFile(string filePath)
     {
-        string outputFilePath = "C:\\Users\\Marina\\Documents\\unzipped.txt";
-        
+
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("File not found", filePath);
+        }
+        string directory = Path.GetDirectoryName(filePath)!;
+        string outputFilePath = Path.Combine(directory, "Unzipped.txt");
+
         StreamReader reader = new StreamReader(filePath);
         string alphabet = reader.ReadLine();
         string compressedData = reader.ReadLine();
+        reader.Close();
+
+        if (string.IsNullOrEmpty(alphabet) || string.IsNullOrEmpty(compressedData))
+            throw new InvalidDataException("File is damaged or empty");
 
         string decompressed = Decompress(compressedData, alphabet);
         File.WriteAllText(outputFilePath, decompressed, Encoding.UTF8);
@@ -89,6 +110,9 @@ public class LZWAlgorythm
 
         foreach (char code in text)
         {
+            if (!char.IsDigit(code))
+                throw new FormatException($"Invalid character in compressed text: '{code}'");
+
             var code1 = Int32.Parse(code.ToString());
             var currPhrase = baseTrie.PhraseByCode(code1, baseTrie);
 

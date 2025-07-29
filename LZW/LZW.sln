@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZW", "LZW\LZW.csproj", "{9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trie", "Trie\Trie.csproj", "{7FD9B6B5-4561-470B-B855-0FFF10F821DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZWTests", "LZWTests\LZWTests.csproj", "{4E96DBE4-2353-4876-BF68-2A6691214D87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7FD9B6B5-4561-470B-B855-0FFF10F821DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FD9B6B5-4561-470B-B855-0FFF10F821DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FD9B6B5-4561-470B-B855-0FFF10F821DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E96DBE4-2353-4876-BF68-2A6691214D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E96DBE4-2353-4876-BF68-2A6691214D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E96DBE4-2353-4876-BF68-2A6691214D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E96DBE4-2353-4876-BF68-2A6691214D87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
