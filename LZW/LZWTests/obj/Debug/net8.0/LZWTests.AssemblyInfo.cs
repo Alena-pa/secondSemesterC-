@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LZWTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+922b874799b1c97b9245854f3db91ed8635fbd36")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1a7077a8b9f16eef7b9f5cd20bab55e4cdf0051")]
 [assembly: System.Reflection.AssemblyProductAttribute("LZWTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LZWTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
